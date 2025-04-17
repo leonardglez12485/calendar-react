@@ -1,11 +1,14 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { LoginPage } from '../auth';
 import { CalendarPage } from '../calendar';
+import { useContext } from 'react';
+import { AuthContext } from '../auth/context/AuthContext';
 
 
 export const AppRouter = () => {
 
-    const authStatus = 'not-authenticated';  // 'not-authenticated' | 'authenticated'
+   const { authStatus } = useContext(AuthContext); 
+    //const authStatus = 'not-authenticated';  // 'not-authenticated' | 'authenticated'
 
   return (
     <Routes>

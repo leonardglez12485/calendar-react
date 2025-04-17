@@ -1,6 +1,16 @@
 import './LoginPage.css';
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 
 export const LoginPage = () => {
+
+    const {login} = useContext(AuthContext)
+
+    const handleLogin = (e) => {
+      e.preventDefault();  
+      login();
+    }
+
     return (
         <div className="container login-container">
             <div className="row">
@@ -23,6 +33,7 @@ export const LoginPage = () => {
                         </div>
                         <div className="d-grid gap-2">
                             <input 
+                                onClick={handleLogin}
                                 type="submit"
                                 className="btnSubmit"
                                 value="Login" 
