@@ -1,5 +1,7 @@
 
 export const Navbar = () => {
+
+
   return (
     <div className="navbar navbar-dark bg-dark-blue mb-4 px-4">
         <span className="navbar-brand">

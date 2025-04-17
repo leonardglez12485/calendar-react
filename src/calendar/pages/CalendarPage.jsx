@@ -1,38 +1,30 @@
 import { Calendar } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
-import { addHours } from 'date-fns'
-import { Navbar, CalendarEventBox, CalendarModal} from '../'
+import { Navbar, CalendarEventBox, CalendarModal, FavNewAdd, FavDeleteEvent} from '../'
 import { localizer, getMesagesES } from '../../helpers'
 import { useState } from 'react'
+import { useUiStore, useCalendarStore } from '../../hooks'
 
 
-const myEventsList = [{
-  title: 'Big Meeting',
-  note: 'Big Meeting',
-  start: new Date(),
-  end: addHours( new Date(), 2),
-  backgroundColor: '#fafafa',
-  user: {
-    _id: '123',
-    name: 'Leonardo'
-  }
-}]
 
 export const CalendarPage = () => {
 
   const [lastView, setLastView] = useState(localStorage.getItem('lastView') || 'month');
+  const { openDateModal } = useUiStore();
+  const { events, setActiveEvent } = useCalendarStore();
   
   const onViewChange = (e) => {
     localStorage.setItem('lastView', e);
     setLastView(e);
   }
 
-  const onDoubleClick = (e) => {
-    console.log({ doubleClick: e });
+  const onDoubleClick = () => {
+    //console.log({ doubleClick: e });
+    openDateModal();
   }
 
   const onSelect = (e) => {
-    console.log({ click: e });
+    setActiveEvent(e);
   }
 
 
@@ -55,7 +47,7 @@ export const CalendarPage = () => {
     <Calendar
       culture='es'
       localizer={localizer}
-      events={myEventsList}
+      events={events}
       // defaultView={lastView}
       startAccessor="start"
       endAccessor="end"
@@ -72,7 +64,10 @@ export const CalendarPage = () => {
       }}
        
     />
-    <CalendarModal />    
+    <CalendarModal />
+    <FavNewAdd />    
+    <FavDeleteEvent />
+    
     </>
   )
 }
