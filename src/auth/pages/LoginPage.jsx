@@ -2,7 +2,9 @@
 import { AuthContext } from '../context/AuthContext';
 import { FaKey } from 'react-icons/fa';
 import './LoginPage.css';
-import { useForm } from '../../hooks';
+import { useAuthStore, useForm } from '../../hooks';
+import { useEffect } from 'react';
+import Swal from 'sweetalert2';
 
 
 const loginFormFields = {
@@ -18,28 +20,60 @@ const registerFormFields = {
 
 export const LoginPage = () => {
 
+    const { startLogin, startRegister, errorMessage} = useAuthStore();
+
     const {loginEmail, loginPassword, onInputChange: onLoginInpuntChange} = useForm(loginFormFields);
     const {registerName, registerEmail, registerPassword, registerPassword2, onInputChange: onRegisterInpuntChange} = useForm(registerFormFields);
 
-   // const {login} = useContext(AuthContext)
-
-    // const handleLogin = (e) => {
-    //   e.preventDefault();  
-    //   login();
-    // }
    const handleLogin = (e) => {
         e.preventDefault();
-        console.log('Login:', loginEmail, loginPassword);
-        // Call the login function from AuthContext
-       // login(loginEmail, loginPassword);
+        startLogin({email: loginEmail, password: loginPassword});
     }
 
     const handleRegister = (e) => {
         e.preventDefault();
-        console.log('Register:', registerName, registerEmail, registerPassword, registerPassword2);
-        // Call the register function from AuthContext
-        // register(registerName, registerEmail, registerPassword, registerPassword2);
+        if (registerPassword !== registerPassword2) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Register Error',
+                text: 'Passwords do not match',
+                confirmButtonText: 'Ok'
+            });
+            return;
+        }
+        if (registerName.length < 1) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Register Error',
+                text: 'Name is required',
+                confirmButtonText: 'Ok'
+            });
+            return;
+        }
+        if (registerEmail.length < 1) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Register Error',
+                text: 'Email is required',
+                confirmButtonText: 'Ok'
+            });
+            return;
+        }
+        startRegister({name: registerName, email: registerEmail, password: registerPassword, password2: registerPassword2});
+       // console.log('Register:', registerName, registerEmail, registerPassword, registerPassword2);
     }
+
+    useEffect(() => {
+        if (errorMessage !== undefined) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Authentication Error',
+                text: errorMessage,
+                confirmButtonText: 'Ok'
+            });
+        }
+    }, [errorMessage])
+    
 
 
     return (
