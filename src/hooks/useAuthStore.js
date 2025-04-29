@@ -7,6 +7,7 @@ import {
   onLogout,
 } from "../store/auth/authSlice";
 import Swal from "sweetalert2";
+import { onLogoutCalendar } from "../store";
 
 export const useAuthStore = () => {
   const { authStatus, user, errorMessage } = useSelector((state) => state.auth);
@@ -44,7 +45,7 @@ export const useAuthStore = () => {
       localStorage.setItem("token-init-date", new Date().getTime());
       dispatch(onLogin({ name: createdUser.name, uid: createdUser._id }));
     } catch (error) {
-      const message = error.response.data.message || 'Register Failed';
+      const message = error.response.data.message || "Register Failed";
       //console.log(message);
       dispatch(onLogout(message));
       setTimeout(() => {
@@ -59,21 +60,22 @@ export const useAuthStore = () => {
 
     try {
       const { data } = await calendarApi.get('/auth/renew-token');
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("token-init-date", new Date().getTime());
-      dispatch(onLogin({ name:data.name, uid:data.uid }));
+      const { token, name, uid } = data.data;
+      localStorage.setItem('token', token);
+      localStorage.setItem('token-init-date', new Date().getTime());
+      dispatch(onLogin({ name, uid }));
     } catch (error) {
-        console.log(error)
-        localStorage.clear();
-        dispatch(onLogout());
+      console.log(error);
+      localStorage.clear();
+      dispatch(onLogout());
     }
-  }
+  };
 
   const startLogout = () => {
     localStorage.clear();
+    dispatch(onLogoutCalendar());
     dispatch(onLogout());
   };
-
 
   return {
     //*Properties

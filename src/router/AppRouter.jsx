@@ -11,9 +11,9 @@ export const AppRouter = () => {
 
     useEffect(() => {
       checkAuthToken();
+       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     
-
     if (authStatus === 'checking') {
         return (
             <h5>Loading...</h5>
